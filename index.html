@@ -64,7 +64,11 @@ details.plan li{margin:6px 0}
 .phrase{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px 20px 16px;margin:0 0 20px}
 .phrase.done{border-color:var(--done)}
 .hin{color:var(--muted);font-size:16px;margin:0 0 4px}
-.ne{font-family:var(--ne);font-size:clamp(26px,6.5vw,32px);line-height:1.4;margin:0 0 14px}
+.ne{font-family:var(--ne);font-size:clamp(26px,6.5vw,32px);line-height:1.4;margin:0 0 14px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ne .listen-btn{flex:0 0 auto;border:0;background:var(--chip);border-radius:50%;width:40px;height:40px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;min-height:44px;min-width:44px}
+.ne .listen-btn:hover{background:var(--accent);color:#fff}
+.ne .listen-btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ne .listen-btn[hidden]{display:none}
 .say{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 4px}
 .say b{font-weight:500;color:var(--muted);font-size:14px;margin-right:2px}
 .say span{background:var(--chip);border-radius:8px;padding:2px 11px;font-size:19px;font-weight:600}
@@ -87,7 +91,7 @@ button.act{font:500 15px var(--hi);color:var(--ink);background:transparent;borde
 button.act:hover{border-color:var(--accent)}
 button.act:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
 .phrase.done button.ok{background:var(--done);border-color:var(--done);color:#fff}
-.listen[hidden]{display:none}
+.listen-btn[hidden]{display:none}
 
 .soon{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:22px;text-align:center;color:var(--muted)}
 .foot{margin-top:32px;color:var(--muted);font-size:14px;max-width:62ch}
@@ -1114,7 +1118,7 @@ function findVoice(){
   if(!("speechSynthesis" in window)) return;
   var vs = window.speechSynthesis.getVoices();
   for(var i=0;i<vs.length;i++){ if((vs[i].lang||"").toLowerCase().indexOf("ne")===0){ neVoice = vs[i]; break; } }
-  var btns = document.querySelectorAll(".listen");
+  var btns = document.querySelectorAll(".listen-btn");
   for(var j=0;j<btns.length;j++) btns[j].hidden = !neVoice;
 }
 if("speechSynthesis" in window){ window.speechSynthesis.onvoiceschanged = findVoice; }
@@ -1187,13 +1191,12 @@ function render(){
     for(var k=0;k<pieces.length;k++) say += "<span>" + pieces[k] + "</span>";
     html += '<article class="phrase' + (isDone(current,i)?' done':'') + '">'
       + '<p class="hin">' + ph[0] + '</p>'
-      + '<p class="ne">' + ph[1] + '</p>'
+      + '<p class="ne"><span>' + ph[1] + '</span><button type="button" class="listen-btn" data-i="' + i + '"' + (neVoice?'':' hidden') + ' aria-label="सुनें">🔊</button></p>'
       + '<div class="say"><b>ऐसे बोलें</b>' + say + '</div>'
       + notesHtml(ph[3])
       + exHtml(current,i)
       + '<div class="acts">'
       + '<button type="button" class="act ok" data-i="' + i + '">' + (isDone(current,i)?'✓ बोल लिया':'बोल लिया') + '</button>'
-      + '<button type="button" class="act listen" data-i="' + i + '"' + (neVoice?'':' hidden') + '>फ़ोन से सुनें</button>'
       + '</div></article>';
   }
   if(n===t){
@@ -1218,7 +1221,7 @@ function render(){
       var y = window.pageYOffset; render(); window.scrollTo(0,y);
     };
   }
-  var ls = dayEl.querySelectorAll(".listen");
+  var ls = dayEl.querySelectorAll(".listen-btn");
   for(var c=0;c<ls.length;c++){
     ls[c].onclick = function(){ speak(DAYS[current].phrases[+this.getAttribute("data-i")][1]); };
   }
