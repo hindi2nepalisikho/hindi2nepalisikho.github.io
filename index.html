@@ -4,6 +4,12 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>नेपाली बोलना सीखें: 30 दिन</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2F5DA8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="नेपाली सीखें">
+<link rel="apple-touch-icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Hind:wght@400;500;600&family=Tiro+Devanagari+Hindi&display=swap" rel="stylesheet">
@@ -1232,6 +1238,7 @@ document.getElementById("reset").onclick = function(){
 };
 
 load(); render(); findVoice();
+if("serviceWorker" in navigator){ navigator.serviceWorker.register("sw.js"); }
 </script>
 </body>
 </html>
